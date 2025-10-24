@@ -9,6 +9,7 @@ An interactive, modern web application for learning JavaScript through hands-on 
 - 🎨 **Beautiful UI**: Modern gradient design with smooth animations
 - 📱 **Responsive**: Works great on desktop and mobile devices
 - ⚡ **Real-time Execution**: See your code results immediately
+- 🌐 **HTML Examples**: Standalone HTML pages showing JavaScript in real web applications
 
 ## Topics Covered
 
@@ -65,12 +66,40 @@ This creates an optimized production build in the `build` folder.
 3. Modify the code in the interactive editor
 4. Click "Run Code" to execute and see the output
 5. Experiment with different values and approaches
+6. Visit `/examples/` for standalone HTML demos showing JavaScript in action
+
+## Standalone HTML Examples
+
+The `public/examples/` directory contains fully interactive HTML pages demonstrating JavaScript concepts:
+
+- **DOM Manipulation** - Dynamically modify webpage content
+- **Interactive Styling** - Change colors, sizes, and styles
+- **Event Handling** - Respond to user interactions
+- **Form Validation** - Real-time input validation
+- **Todo List App** - Complete CRUD application
+- **Number Guessing Game** - Game logic with loops and conditionals
+- **Counter & Timer** - setInterval and setTimeout examples
+- **Image Gallery** - Array manipulation and navigation
+- **Temperature Converter** - Mathematical operations and functions
+
+Access these at `http://localhost:3000/examples/` when running the dev server.
 
 ## Project Structure
 
 ```
 JAVASCRIPT/
 ├── public/
+│   ├── examples/             # Standalone HTML examples
+│   │   ├── index.html        # Examples homepage
+│   │   ├── dom-manipulation.html
+│   │   ├── styling-demo.html
+│   │   ├── events-demo.html
+│   │   ├── form-validation.html
+│   │   ├── todo-app.html
+│   │   ├── number-game.html
+│   │   ├── counter-timer.html
+│   │   ├── image-gallery.html
+│   │   └── temperature-converter.html
 │   └── index.html
 ├── src/
 │   ├── components/
