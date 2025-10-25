@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 600px; width: 100%; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        h1 { color: #667eea; text-align: center; margin-bottom: 30px; }
+        .converter-box { background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; }
+        .input-group { margin: 20px 0; }
+        label { display: block; font-weight: bold; color: #333; margin-bottom: 10px; font-size: 18px; }
+        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 6px; font-size: 24px; text-align: center; box-sizing: border-box; }
+        button { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px; border-radius: 6px; cursor: pointer; font-size: 16px; margin: 10px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌡️ Temperature Converter</h1>
+        <div class="converter-box">
+            <div class="input-group">
+                <label for="celsius">Celsius (°C)</label>
+                <input type="number" id="celsius" placeholder="0" oninput="convertFromCelsius()">
+            </div>
+            <div class="input-group">
+                <label for="fahrenheit">Fahrenheit (°F)</label>
+                <input type="number" id="fahrenheit" placeholder="32" oninput="convertFromFahrenheit()">
+            </div>
+            <div class="input-group">
+                <label for="kelvin">Kelvin (K)</label>
+                <input type="number" id="kelvin" placeholder="273.15" oninput="convertFromKelvin()">
+            </div>
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+        <a href="index.html" style="display: block; margin-top: 20px; color: #667eea; text-decoration: none; font-weight: bold; text-align: center;">← Back</a>
+    </div>
+    <script>
+        function convertFromCelsius() {
+            const c = parseFloat(document.getElementById('celsius').value);
+            if (!isNaN(c)) {
+                document.getElementById('fahrenheit').value = ((c * 9/5) + 32).toFixed(2);
+                document.getElementById('kelvin').value = (c + 273.15).toFixed(2);
+            }
+        }
+        function convertFromFahrenheit() {
+            const f = parseFloat(document.getElementById('fahrenheit').value);
+            if (!isNaN(f)) {
+                const c = (f - 32) * 5/9;
+                document.getElementById('celsius').value = c.toFixed(2);
+                document.getElementById('kelvin').value = (c + 273.15).toFixed(2);
+            }
+        }
+        function convertFromKelvin() {
+            const k = parseFloat(document.getElementById('kelvin').value);
+            if (!isNaN(k)) {
+                const c = k - 273.15;
+                document.getElementById('celsius').value = c.toFixed(2);
+                document.getElementById('fahrenheit').value = ((c * 9/5) + 32).toFixed(2);
+            }
+        }
+        function clearAll() {
+            document.getElementById('celsius').value = '';
+            document.getElementById('fahrenheit').value = '';
+            document.getElementById('kelvin').value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        input.error {
+            border-color: #f44336;
+        }
+        input.success {
+            border-color: #4caf50;
+        }
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        .success-message {
+            color: #4caf50;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .password-strength {
+            height: 5px;
+            border-radius: 3px;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+        .strength-weak { background: #f44336; width: 33%; }
+        .strength-medium { background: #ff9800; width: 66%; }
+        .strength-strong { background: #4caf50; width: 100%; }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        #result.show {
+            display: block;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Form Validation</h1>
+        
+        <form id="registrationForm" onsubmit="validateForm(event)">
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" onblur="validateUsername()">
+                <div class="error-message" id="usernameError">Username must be 3-20 characters</div>
+                <div class="success-message" id="usernameSuccess">✓ Looks good!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" onblur="validateEmail()">
+                <div class="error-message" id="emailError">Please enter a valid email</div>
+                <div class="success-message" id="emailSuccess">✓ Valid email!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" oninput="checkPasswordStrength()" onblur="validatePassword()">
+                <div class="password-strength" id="passwordStrength"></div>
+                <div class="error-message" id="passwordError">Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number</div>
+                <div class="success-message" id="passwordSuccess">✓ Strong password!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" onblur="validateConfirmPassword()">
+                <div class="error-message" id="confirmError">Passwords do not match</div>
+                <div class="success-message" id="confirmSuccess">✓ Passwords match!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age *</label>
+                <input type="number" id="age" onblur="validateAge()">
+                <div class="error-message" id="ageError">You must be at least 18 years old</div>
+                <div class="success-message" id="ageSuccess">✓ Valid age!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="123-456-7890" onblur="validatePhone()">
+                <div class="error-message" id="phoneError">Please enter a valid phone number (XXX-XXX-XXXX)</div>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div id="result"></div>
+
+        <a href="index.html" style="display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-weight: bold;">← Back to Examples</a>
+    </div>
+
+    <script>
+        function validateUsername() {
+            const username = document.getElementById('username').value;
+            const input = document.getElementById('username');
+            const error = document.getElementById('usernameError');
+            const success = document.getElementById('usernameSuccess');
+
+            if (username.length >= 3 && username.length <= 20) {
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.classList.remove('show');
+                success.classList.add('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                input.classList.remove('success');
+                error.classList.add('show');
+                success.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const input = document.getElementById('email');
+            const error = document.getElementById('emailError');
+            const success = document.getElementById('emailSuccess');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailRegex.test(email)) {
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.classList.remove('show');
+                success.classList.add('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                input.classList.remove('success');
+                error.classList.add('show');
+                success.classList.remove('show');
+                return false;
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strength = document.getElementById('passwordStrength');
+
+            if (password.length === 0) {
+                strength.className = 'password-strength';
+                return;
+            }
+
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+
+            strength.className = 'password-strength';
+            if (score <= 2) {
+                strength.classList.add('strength-weak');
+            } else if (score <= 4) {
+                strength.classList.add('strength-medium');
+            } else {
+                strength.classList.add('strength-strong');
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const input = document.getElementById('password');
+            const error = document.getElementById('passwordError');
+            const success = document.getElementById('passwordSuccess');
+            
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const isLongEnough = password.length >= 8;
+
+            if (hasUpperCase && hasLowerCase && hasNumber && isLongEnough) {
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.classList.remove('show');
+                success.classList.add('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                input.classList.remove('success');
+                error.classList.add('show');
+                success.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const input = document.getElementById('confirmPassword');
+            const error = document.getElementById('confirmError');
+            const success = document.getElementById('confirmSuccess');
+
+            if (password === confirmPassword && confirmPassword !== '') {
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.classList.remove('show');
+                success.classList.add('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                input.classList.remove('success');
+                error.classList.add('show');
+                success.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateAge() {
+            const age = parseInt(document.getElementById('age').value);
+            const input = document.getElementById('age');
+            const error = document.getElementById('ageError');
+            const success = document.getElementById('ageSuccess');
+
+            if (age >= 18) {
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.classList.remove('show');
+                success.classList.add('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                input.classList.remove('success');
+                error.classList.add('show');
+                success.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validatePhone() {
+            const phone = document.getElementById('phone').value;
+            const input = document.getElementById('phone');
+            const error = document.getElementById('phoneError');
+            const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+
+            if (phone === '' || phoneRegex.test(phone)) {
+                input.classList.remove('error');
+                error.classList.remove('show');
+                return true;
+            } else {
+                input.classList.add('error');
+                error.classList.add('show');
+                return false;
+            }
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+
+            const isUsernameValid = validateUsername();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmValid = validateConfirmPassword();
+            const isAgeValid = validateAge();
+            const isPhoneValid = validatePhone();
+
+            if (isUsernameValid && isEmailValid && isPasswordValid && isConfirmValid && isAgeValid && isPhoneValid) {
+                const result = document.getElementById('result');
+                result.innerHTML = '<h3>✓ Registration Successful!</h3><p>All fields are valid. Form submitted successfully!</p>';
+                result.classList.add('show');
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('registrationForm').reset();
+                    result.classList.remove('show');
+                    document.querySelectorAll('input').forEach(input => {
+                        input.classList.remove('success', 'error');
+                    });
+                    document.querySelectorAll('.success-message').forEach(msg => {
+                        msg.classList.remove('show');
+                    });
+                    document.getElementById('passwordStrength').className = 'password-strength';
+                }, 3000);
+            } else {
+                alert('Please fix all errors before submitting!');
+            }
+        }
+    </script>
+</body>
+</html>

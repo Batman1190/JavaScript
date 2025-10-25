@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Manipulation Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; }
+        .demo-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        #output {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            border: 2px solid #667eea;
+        }
+        .highlight {
+            background: yellow;
+            padding: 2px 5px;
+        }
+        input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 DOM Manipulation Examples</h1>
+        
+        <div class="demo-box">
+            <h2>Example 1: Change Text Content</h2>
+            <p id="text1">This is the original text.</p>
+            <button onclick="changeText()">Change Text</button>
+            <button onclick="resetText()">Reset</button>
+        </div>
+
+        <div class="demo-box">
+            <h2>Example 2: Add Elements Dynamically</h2>
+            <input type="text" id="itemInput" placeholder="Enter item name">
+            <button onclick="addItem()">Add Item</button>
+            <ul id="itemList"></ul>
+        </div>
+
+        <div class="demo-box">
+            <h2>Example 3: Change HTML Content</h2>
+            <div id="output">Click a button to see output here</div>
+            <button onclick="addBold()">Add Bold Text</button>
+            <button onclick="addList()">Add List</button>
+            <button onclick="addImage()">Add Image</button>
+            <button onclick="clearOutput()">Clear</button>
+        </div>
+
+        <div class="demo-box">
+            <h2>Example 4: Get Elements by Class/Tag</h2>
+            <p class="highlight-me">Paragraph 1</p>
+            <p class="highlight-me">Paragraph 2</p>
+            <p class="highlight-me">Paragraph 3</p>
+            <button onclick="highlightAll()">Highlight All</button>
+            <button onclick="removeHighlight()">Remove Highlight</button>
+        </div>
+
+        <a href="index.html" style="display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-weight: bold;">← Back to Examples</a>
+    </div>
+
+    <script>
+        // Example 1: Change text content
+        function changeText() {
+            document.getElementById('text1').textContent = 'The text has been changed using JavaScript!';
+        }
+
+        function resetText() {
+            document.getElementById('text1').textContent = 'This is the original text.';
+        }
+
+        // Example 2: Add elements dynamically
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const itemText = input.value.trim();
+            
+            if (itemText === '') {
+                alert('Please enter an item name!');
+                return;
+            }
+
+            const list = document.getElementById('itemList');
+            const li = document.createElement('li');
+            li.textContent = itemText;
+            
+            // Add delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.style.marginLeft = '10px';
+            deleteBtn.style.padding = '5px 10px';
+            deleteBtn.onclick = function() {
+                list.removeChild(li);
+            };
+            
+            li.appendChild(deleteBtn);
+            list.appendChild(li);
+            input.value = '';
+        }
+
+        // Example 3: Change HTML content
+        function addBold() {
+            document.getElementById('output').innerHTML = '<strong>This is bold text!</strong>';
+        }
+
+        function addList() {
+            document.getElementById('output').innerHTML = `
+                <ul>
+                    <li>First item</li>
+                    <li>Second item</li>
+                    <li>Third item</li>
+                </ul>
+            `;
+        }
+
+        function addImage() {
+            document.getElementById('output').innerHTML = `
+                <p>Here's a placeholder image:</p>
+                <img src="https://via.placeholder.com/200" alt="Placeholder" style="border-radius: 8px;">
+            `;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = 'Click a button to see output here';
+        }
+
+        // Example 4: Get elements by class
+        function highlightAll() {
+            const paragraphs = document.getElementsByClassName('highlight-me');
+            for (let p of paragraphs) {
+                p.classList.add('highlight');
+            }
+        }
+
+        function removeHighlight() {
+            const paragraphs = document.getElementsByClassName('highlight-me');
+            for (let p of paragraphs) {
+                p.classList.remove('highlight');
+            }
+        }
+
+        // Allow Enter key to add items
+        document.getElementById('itemInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addItem();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter & Timer Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; }
+        .demo-box {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .counter-display {
+            font-size: 72px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover { opacity: 0.9; }
+        .reset-btn { background: #f44336; }
+        .stop-btn { background: #ff9800; }
+        .timer-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin: 5px;
+            width: 80px;
+        }
+        .time-display {
+            font-size: 64px;
+            font-weight: bold;
+            color: #2196f3;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏱️ Counter & Timer Examples</h1>
+        
+        <div class="demo-box">
+            <h2>Simple Counter</h2>
+            <div class="counter-display" id="counter">0</div>
+            <button onclick="increment()">+ Increment</button>
+            <button onclick="decrement()">- Decrement</button>
+            <button onclick="resetCounter()" class="reset-btn">Reset</button>
+        </div>
+
+        <div class="demo-box">
+            <h2>Auto Counter (setInterval)</h2>
+            <div class="counter-display" id="autoCounter">0</div>
+            <button onclick="startAutoCounter()">Start</button>
+            <button onclick="stopAutoCounter()" class="stop-btn">Stop</button>
+            <button onclick="resetAutoCounter()" class="reset-btn">Reset</button>
+            <p style="color: #666;">Automatically increments every second</p>
+        </div>
+
+        <div class="demo-box">
+            <h2>Stopwatch</h2>
+            <div class="time-display" id="stopwatch">00:00:00</div>
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="stopStopwatch()" class="stop-btn">Stop</button>
+            <button onclick="resetStopwatch()" class="reset-btn">Reset</button>
+        </div>
+
+        <div class="demo-box">
+            <h2>Countdown Timer</h2>
+            <div>
+                <input type="number" id="minutes" class="timer-input" placeholder="Min" min="0" value="1">
+                <input type="number" id="seconds" class="timer-input" placeholder="Sec" min="0" max="59" value="0">
+            </div>
+            <div class="time-display" id="countdown">01:00</div>
+            <button onclick="startCountdown()">Start</button>
+            <button onclick="stopCountdown()" class="stop-btn">Stop</button>
+            <button onclick="resetCountdown()" class="reset-btn">Reset</button>
+        </div>
+
+        <a href="index.html" style="display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-weight: bold;">← Back to Examples</a>
+    </div>
+
+    <script>
+        // Simple Counter
+        let count = 0;
+
+        function increment() {
+            count++;
+            document.getElementById('counter').textContent = count;
+        }
+
+        function decrement() {
+            count--;
+            document.getElementById('counter').textContent = count;
+        }
+
+        function resetCounter() {
+            count = 0;
+            document.getElementById('counter').textContent = count;
+        }
+
+        // Auto Counter
+        let autoCount = 0;
+        let autoInterval = null;
+
+        function startAutoCounter() {
+            if (autoInterval) return;
+            autoInterval = setInterval(() => {
+                autoCount++;
+                document.getElementById('autoCounter').textContent = autoCount;
+            }, 1000);
+        }
+
+        function stopAutoCounter() {
+            clearInterval(autoInterval);
+            autoInterval = null;
+        }
+
+        function resetAutoCounter() {
+            stopAutoCounter();
+            autoCount = 0;
+            document.getElementById('autoCounter').textContent = autoCount;
+        }
+
+        // Stopwatch
+        let stopwatchSeconds = 0;
+        let stopwatchInterval = null;
+
+        function startStopwatch() {
+            if (stopwatchInterval) return;
+            stopwatchInterval = setInterval(() => {
+                stopwatchSeconds++;
+                updateStopwatchDisplay();
+            }, 1000);
+        }
+
+        function stopStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchInterval = null;
+        }
+
+        function resetStopwatch() {
+            stopStopwatch();
+            stopwatchSeconds = 0;
+            updateStopwatchDisplay();
+        }
+
+        function updateStopwatchDisplay() {
+            const hours = Math.floor(stopwatchSeconds / 3600);
+            const minutes = Math.floor((stopwatchSeconds % 3600) / 60);
+            const seconds = stopwatchSeconds % 60;
+            
+            const display = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            document.getElementById('stopwatch').textContent = display;
+        }
+
+        // Countdown Timer
+        let countdownSeconds = 60;
+        let countdownInterval = null;
+
+        function startCountdown() {
+            if (countdownInterval) return;
+            
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('seconds').value) || 0;
+            countdownSeconds = minutes * 60 + seconds;
+            
+            if (countdownSeconds <= 0) {
+                alert('Please set a time greater than 0!');
+                return;
+            }
+
+            countdownInterval = setInterval(() => {
+                countdownSeconds--;
+                updateCountdownDisplay();
+                
+                if (countdownSeconds <= 0) {
+                    stopCountdown();
+                    alert('⏰ Time\'s up!');
+                }
+            }, 1000);
+        }
+
+        function stopCountdown() {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+
+        function resetCountdown() {
+            stopCountdown();
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('seconds').value) || 0;
+            countdownSeconds = minutes * 60 + seconds;
+            updateCountdownDisplay();
+        }
+
+        function updateCountdownDisplay() {
+            const minutes = Math.floor(countdownSeconds / 60);
+            const seconds = countdownSeconds % 60;
+            const display = `${pad(minutes)}:${pad(seconds)}`;
+            document.getElementById('countdown').textContent = display;
+        }
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        // Initialize displays
+        updateStopwatchDisplay();
+        updateCountdownDisplay();
+    </script>
+</body>
+</html>

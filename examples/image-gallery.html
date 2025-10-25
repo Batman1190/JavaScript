@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; text-align: center; }
+        .gallery {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .main-image {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+        .image-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .image-info h3 { margin: 0 0 10px 0; color: #333; }
+        .image-info p { margin: 5px 0; color: #666; }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover { opacity: 0.9; }
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .thumbnail {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .thumbnail.active {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: #ddd;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Image Gallery with Arrays</h1>
+        
+        <div class="gallery">
+            <img id="mainImage" class="main-image" src="https://picsum.photos/600/400?random=1" alt="Gallery Image">
+            
+            <div class="image-info">
+                <h3 id="imageTitle">Image Title</h3>
+                <p id="imageDescription">Image description goes here</p>
+                <p><strong>Image <span id="currentIndex">1</span> of <span id="totalImages">5</span></strong></p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <div class="controls">
+                <button onclick="previousImage()">← Previous</button>
+                <button onclick="toggleAutoPlay()" id="autoPlayBtn">▶ Auto Play</button>
+                <button onclick="nextImage()">Next →</button>
+            </div>
+
+            <div class="thumbnails" id="thumbnails"></div>
+        </div>
+
+        <a href="index.html" style="display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; font-weight: bold;">← Back to Examples</a>
+    </div>
+
+    <script>
+        // Array of images with data
+        const images = [
+            {
+                url: 'https://picsum.photos/600/400?random=1',
+                title: 'Mountain Landscape',
+                description: 'Beautiful mountain scenery with clear blue sky'
+            },
+            {
+                url: 'https://picsum.photos/600/400?random=2',
+                title: 'Ocean Sunset',
+                description: 'Stunning sunset over the ocean waves'
+            },
+            {
+                url: 'https://picsum.photos/600/400?random=3',
+                title: 'Forest Path',
+                description: 'Peaceful path through a green forest'
+            },
+            {
+                url: 'https://picsum.photos/600/400?random=4',
+                title: 'City Lights',
+                description: 'Urban cityscape with bright lights at night'
+            },
+            {
+                url: 'https://picsum.photos/600/400?random=5',
+                title: 'Desert Dunes',
+                description: 'Golden sand dunes in the desert'
+            }
+        ];
+
+        let currentIndex = 0;
+        let autoPlayInterval = null;
+        let isAutoPlaying = false;
+
+        function displayImage(index) {
+            const image = images[index];
+            document.getElementById('mainImage').src = image.url;
+            document.getElementById('imageTitle').textContent = image.title;
+            document.getElementById('imageDescription').textContent = image.description;
+            document.getElementById('currentIndex').textContent = index + 1;
+            
+            // Update progress bar
+            const progress = ((index + 1) / images.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            
+            // Update thumbnails
+            updateThumbnails();
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            displayImage(currentIndex);
+        }
+
+        function previousImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            displayImage(currentIndex);
+        }
+
+        function goToImage(index) {
+            currentIndex = index;
+            displayImage(currentIndex);
+        }
+
+        function toggleAutoPlay() {
+            const btn = document.getElementById('autoPlayBtn');
+            
+            if (isAutoPlaying) {
+                clearInterval(autoPlayInterval);
+                btn.textContent = '▶ Auto Play';
+                isAutoPlaying = false;
+            } else {
+                autoPlayInterval = setInterval(nextImage, 3000);
+                btn.textContent = '⏸ Pause';
+                isAutoPlaying = true;
+            }
+        }
+
+        function createThumbnails() {
+            const container = document.getElementById('thumbnails');
+            container.innerHTML = '';
+            
+            images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image.url;
+                img.alt = image.title;
+                img.className = 'thumbnail';
+                img.onclick = () => goToImage(index);
+                container.appendChild(img);
+            });
+        }
+
+        function updateThumbnails() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, index) => {
+                if (index === currentIndex) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        // Initialize gallery
+        document.getElementById('totalImages').textContent = images.length;
+        createThumbnails();
+        displayImage(0);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousImage();
+            if (e.key === 'ArrowRight') nextImage();
+        });
+    </script>
+</body>
+</html>
